@@ -1,7 +1,4 @@
 # .bashrc
-# r00txs specific bashr . less typing , simple and easier muscle memory . FTW !
-# Once downloaded , kickoff installer "~/profile/install_profile.sh" 
-# User specific aliases and functions
 
 alias rm='rm -i'
 alias cp='cp -i'
