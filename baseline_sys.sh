@@ -17,17 +17,24 @@ cd /root
 
 export PUB_IFACE_NAME=`ip addr | grep -i broadcast | awk '{ print $2 }'| sed 's/:/\ /g' | head -1`
 echo $PUB_IFACE_NAME
-
+export PUB_IFACE_MAC=`ip addr | grep -i ether | awk {'print $2'} | head -1`
+export LAST4MAC=`echo $PUB_IFACE_MAC  | sed s/://g | cut -c 9-12`
 # Set ethernet interface to come up always on boot
 sed -i 's/ONBOOT=no/ONBOOT=yes/g' /etc/sysconfig/network-scripts/ifcfg-$PUB_IFACE_NAME
+# Set hostname with last4 digits of the node MAC address
+hostnamectl set-hostname "node-$LAST4MAC"
+# Set DNS server , change to your liking , using cloudflare's
+echo "nameserver 1.1.1.1" >> /etc/resolv.conf
 
 # Optional Steps: If this host will be used as a  K8s nodes
 # Turn the SELINUX Off to stop it from mucking around w/ file permissions
 sed -i 's/SELINUX=permissive/SELINUX=disabled/g' /etc/selinux/config
 
-# Turn Firewall Off or Add the ports you want to expose
-systemctl stop firewalld
-systemctl disable firewalld
+#
+
+# Optional:  Turn Firewall Off or Add the ports you want to expose
+#systemctl stop firewalld
+#systemctl disable firewalld
 
 # Extra Packages for Enterprise Linux (EPEL),
 # packages for the RHEL & RHEL based distributions
@@ -44,11 +51,8 @@ dnf -y upgrade
 
 
 # Configure NTP and other packages
-systemctl start ntpd
-systemctl enable ntpd
-systemctl status ntpd
-ntpdate -u -s 0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org
-
+timedatectl set-ntp true
+timedatectl set-timezone America/Chicago
 
 # Download and install the efficient bashrc profile for quick shortcuts. skip / change to suit your needs
 curl https://raw.githubusercontent.com/rizviz/devbaseline/master/bashrc-profile --output bashrc.new
@@ -66,4 +70,4 @@ read -r -p "Are you sure you want to continue with system reboot? [Y/n]" respons
     exit 1
  fi
 
-shutdown -r now
+#shutdown -r now
