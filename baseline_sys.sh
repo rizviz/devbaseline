@@ -50,8 +50,13 @@ systemctl status ntpd
 ntpdate -u -s 0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org
 
 
-# install the efficient bashrc profile for quick shortcuts. skip / change to suit your needs
-./install_bash_profile.sh
+# Download and install the efficient bashrc profile for quick shortcuts. skip / change to suit your needs
+curl https://raw.githubusercontent.com/rizviz/devbaseline/master/bashrc-profile --output bashrc.new
+cp .bashrc bashrc.orig
+cp bashrc.new .bashrc
+source .bashrc
+
+
 
 # Before rebooting check w/ user
 read -r -p "Are you sure you want to continue with system reboot? [Y/n]" response
