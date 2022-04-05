@@ -18,11 +18,11 @@ cd /root
 export PUB_IFACE_NAME=`ip addr | grep -i broadcast | awk '{ print $2 }'| sed 's/:/\ /g' | head -1`
 echo $PUB_IFACE_NAME
 export PUB_IFACE_MAC=`ip addr | grep -i ether | awk {'print $2'} | head -1`
-export LAST4MAC=`echo $PUB_IFACE_MAC  | sed s/://g | cut -c 9-12`
+export LAST5MAC=`echo $PUB_IFACE_MAC  | sed s/://g | cut -c 8-12`
 # Set ethernet interface to come up always on boot
 sed -i 's/ONBOOT=no/ONBOOT=yes/g' /etc/sysconfig/network-scripts/ifcfg-$PUB_IFACE_NAME
 # Set hostname with last4 digits of the node MAC address
-hostnamectl set-hostname "node-$LAST4MAC"
+hostnamectl set-hostname "node-$LAST5MAC"
 # Set DNS server , change to your liking , using cloudflare's
 echo "nameserver 1.1.1.1" >> /etc/resolv.conf
 
@@ -46,7 +46,7 @@ dnf -y install epel-release
 dnf -y update
 
 # Install necessary packages
-dnf -y install vim rsync git unzip wget ntp ntpdate
+dnf -y install vim rsync git unzip wget
 dnf -y upgrade
 
 
@@ -61,6 +61,15 @@ cp bashrc.new .bashrc
 source .bashrc
 
 
+## Optional : Store all updates/changes in a file
+echo "Hostname: `hostname`" > ~/OS_BASELINE.txt
+ echo "Operating System: `hostnamectl | grep Operating`" >> ~/OS_BASELINE.txt
+ echo "IP Address Local: `ifconfig -a | grep inet | head -1`" >> ~/OS_BASELINE.txt
+ echo "IP Address WAN: `dig +short myip.opendns.com @resolver1.opendns.com`" >> ~/OS_BASELINE.txt
+ echo "DNS Server: `nslookup cnn.com | grep Server`" >> ~/OS_BASELINE.txt
+ echo "Gateway IP: `ip route | grep default | awk '{print$3}' `" >> ~/OS_BASELINE.txt
+
+
 
 # Before rebooting check w/ user
 read -r -p "Are you sure you want to continue with system reboot? [Y/n]" response
@@ -70,4 +79,5 @@ read -r -p "Are you sure you want to continue with system reboot? [Y/n]" respons
     exit 1
  fi
 
-#shutdown -r now
+
+shutdown -r now
