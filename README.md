@@ -1,4 +1,5 @@
-# Dev Baseline  
+# Dev Baseline for OS
+Standardizing your node OS environment is key to ensuring a less stress and bug free development experience.
 As the title suggests this is a set of commands to baseline an linux operating system instance ( virtual/physical ) as soon as the OS is installed.
 Specifically :  
 
