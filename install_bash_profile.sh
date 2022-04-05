@@ -1,8 +1,4 @@
 #!/bin/bash
-
-
-yum -y install bind-utils net-tools
-
 if [[ $OSTYPE == 'linux-gnu' ]]; then
    cp -f bashrc-profile  ~/.bashrc
    source ~/.bashrc

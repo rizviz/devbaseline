@@ -7,7 +7,7 @@ alias grep='grep -i'
 alias c=clear
 alias e=exit
 alias h=history
-alias ll="ls -haltFG --color=auto | more "
+alias ll="ls -hltFG --color=auto | more "
 alias ls="ls -hltFG --color=auto"
 
 # directories ** NOTE : Speicific to RHEL/CENTOS
