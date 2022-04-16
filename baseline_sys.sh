@@ -46,7 +46,7 @@ dnf -y install epel-release
 dnf -y update
 
 # Install necessary packages
-dnf -y install vim rsync git unzip wget open-vm-tools
+dnf -y install vim rsync git unzip wget open-vm-tools net-tools bind-utils
 dnf -y upgrade
 
 
