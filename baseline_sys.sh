@@ -27,10 +27,12 @@ hostnamectl set-hostname "node-$LAST5MAC"
 echo "nameserver 1.1.1.1" >> /etc/resolv.conf
 
 # Optional Steps: If this host will be used as a  K8s nodes
-# Turn the SELINUX Off to stop it from mucking around w/ file permissions
-sed -i 's/SELINUX=permissive/SELINUX=disabled/g' /etc/selinux/config
+# 1. Turn the SELINUX Off to stop it from mucking around w/ file permissions
+sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 
-#
+# 2. Turn off Swap and comment out fstab for persistence
+swapoff -a
+sed -i '/rl-swap/s/^/#/g' /etc/fstab
 
 # Optional:  Turn Firewall Off or Add the ports you want to expose
 #systemctl stop firewalld
