@@ -1,4 +1,5 @@
 #!/bin/bash
+# Updated v4: 09/20/2023 : Updates to timezone and cleanups
 # Updated v3: 04/02/2022 : RockyLinux updates
 # Updated v2: 10/3/2017
 # Original Version Date : 12/1/2014
@@ -26,13 +27,13 @@ hostnamectl set-hostname "node-$LAST5MAC"
 # Set DNS server , change to your liking , using cloudflare's
 echo "nameserver 1.1.1.1" >> /etc/resolv.conf
 
-# Optional Steps: If this host will be used as a  K8s nodes
-# 1. Turn the SELINUX Off to stop it from mucking around w/ file permissions
-sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+# Optional Steps: If this host will be used as a K8s nodes, comment if not needed
+ # 1. Turn the SELINUX Off to stop it from mucking around w/ file permissions
+ sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 
-# 2. Turn off Swap and comment out fstab for persistence
-swapoff -a
-sed -i '/rl-swap/s/^/#/g' /etc/fstab
+ # 2. Turn off Swap and comment out fstab for persistence
+ swapoff -a
+ sed -i '/rl-swap/s/^/#/g' /etc/fstab
 
 # Optional:  Turn Firewall Off or Add the ports you want to expose
 #systemctl stop firewalld
@@ -52,9 +53,10 @@ dnf -y install vim rsync git unzip wget open-vm-tools net-tools bind-utils
 dnf -y upgrade
 
 
-# Configure NTP and other packages
+# Configure Timezone and NTP. Since we dont know timezone , grab using public IP and set accordingly.
 timedatectl set-ntp true
-timedatectl set-timezone America/Chicago
+export TIMEZONE= `curl ipinfo.io | grep timezone | awk '{print $2}' | sed 's/",//' | sed 's/\"//'`
+timedatectl set-timezone $TIMEZONE
 
 # Download and install the efficient bashrc profile for quick shortcuts. skip / change to suit your needs
 curl https://raw.githubusercontent.com/rizviz/devbaseline/master/bashrc-profile --output bashrc.new
